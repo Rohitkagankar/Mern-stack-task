@@ -4,7 +4,6 @@ const axios = require('axios');
 const Transaction = require('../models/transactionModel');
 const dataURL = process.env.DATA_URL || '';
 
-// get api to get transaction data by month
 router.get('/transactions', async (req, res) => {
     try {
         const page = parseInt(req.query.page) - 1 || 0;
@@ -50,7 +49,6 @@ router.get('/transactions', async (req, res) => {
     }
 })
 
-// get api for statistics by month
 router.get('/statistics', async (req, res) => {
     try {
         const month = !isNaN(parseInt(req.query.month)) ? parseInt(req.query.month) : 3;
@@ -59,7 +57,7 @@ router.get('/statistics', async (req, res) => {
                 $eq: [{ $month: "$dateOfSale" }, month]
             }
         }
-        // project query to filter out the relevant field, reducing payload data
+    
         const projectQuery = {
             _id: 0,
             price: 1,
@@ -68,7 +66,6 @@ router.get('/statistics', async (req, res) => {
         }
     
         const data = await Transaction.find(monthQuery, projectQuery);
-        // calculation for total sale, total number of products sold and unsold
         const response = data.reduce((acc, curr) => {
             const currPrice = parseFloat(curr.price);
 
@@ -88,7 +85,6 @@ router.get('/statistics', async (req, res) => {
 })
 
 
-// get api to create an API for bar chart
 router.get('/bar-chart', async (req, res) => {
     try {
         const month = !isNaN(parseInt(req.query.month)) ? parseInt(req.query.month) : 3;
@@ -121,7 +117,7 @@ router.get('/bar-chart', async (req, res) => {
         const response = data.reduce((acc, curr) => {
             const currPrice = parseFloat(curr.price);
 
-            // calculation for price range such that all values <= priceRange && > priceRange-100 will fall in this range
+            
             let priceRange = Math.ceil(currPrice / 100) * 100;
 
             if(priceRange == 100) 
@@ -131,7 +127,6 @@ router.get('/bar-chart', async (req, res) => {
             else 
                 priceRange = `${priceRange-100+1}-${priceRange}`;
 
-            // if current range does not exit then set to 1, else add 1
             acc[priceRange]++; 
             
             return acc;
@@ -145,7 +140,7 @@ router.get('/bar-chart', async (req, res) => {
 })
 
 
-// get api for pie chart, find unique categories and number of items from that category for the selected month regardless of the year
+
 router.get('/pie-chart', async (req, res) => {
     try {
         const month = !isNaN(parseInt(req.query.month)) ? parseInt(req.query.month) : 3;
@@ -161,7 +156,6 @@ router.get('/pie-chart', async (req, res) => {
         const data = await Transaction.find(monthQuery, projectQuery);
 
         const response = data.reduce((acc, curr) => {
-            // if current category does not exit then set to 1, else add 1
             acc[curr.category] ? acc[curr.category]++ : acc[curr.category] = 1;
 
             return acc;
@@ -174,7 +168,7 @@ router.get('/pie-chart', async (req, res) => {
     }
 })
 
-// get api to fetche the data from all the 3 APIs mentioned above, combines the response and sends a final response of the combined JSON
+
 router.get('/combined-data', async (req, res) => {
     try {
         const baseURL = req.protocol + '://' + req.get('host');
@@ -189,7 +183,7 @@ router.get('/combined-data', async (req, res) => {
             barChartData: barChart.data,
             pieChartData: pieChart.data
         }
-        // console.log(response);
+        
         res.status(200).json(response);
     } catch (error) {
         console.log(error);

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { Table, Input, message, Image } from 'antd';
 import axios from 'axios';
+import './Transactions.css';  // Import the CSS file
 
 const { Search } = Input;
 const columns = [
@@ -19,11 +20,13 @@ const columns = [
         title: "Price",
         dataIndex: "price",
         render: (price) => parseFloat(price).toFixed(2),
-        width: "80px"
+        width: "80px",
+        className: 'price-column'
     },
     {
         title: "Description",
         dataIndex: "description",
+        className: 'description-column'
     },
     {
         title: "Category",
@@ -34,19 +37,22 @@ const columns = [
         title: "Sold",
         dataIndex: "sold",
         render: (sold) => sold ? "Yes" : "No",
-        width: "50px"
+        width: "50px",
+        className: 'sold-column'
     },
     {
         title: "Date",
         dataIndex: "dateOfSale",
         render: (date) => moment(date).format("DD MMM YYYY"),
-        width: "100px"
+        width: "100px",
+        className: 'date-column'
     },
     {
         title: "Image",
         dataIndex: "image",
-        render: (url) => <Image src={url} alt="Product Image" />,
-        width: "80px"
+        render: (url) => <Image src={url} alt="Product Image" className="product-image" />,
+        width: "80px",
+        className: 'image-column'
     }
 ];
 
@@ -59,7 +65,6 @@ function Transactions({ month, monthText }) {
             pageSize: 10
         }
     });
-
 
     const getData = async () => {
         try {
@@ -95,7 +100,6 @@ function Transactions({ month, monthText }) {
             pagination
         });
 
-        // `dataSource` is useless since `pageSize` changed
         if (pagination.pageSize !== tableParams.pagination?.pageSize) {
             setData([]);
         }
@@ -113,15 +117,12 @@ function Transactions({ month, monthText }) {
     }, [JSON.stringify(tableParams), month]);
 
     return (
-        <>
+        <div className="transactions-container">
             <Search
                 placeholder="Search"
                 allowClear
                 onSearch={handleSearch}
-                style={{
-                    width: 300,
-                    padding: "12px 0px"
-                }}
+                className="search-bar"
             />
 
             <Table
@@ -134,10 +135,11 @@ function Transactions({ month, monthText }) {
                 size='small'
                 bordered
                 title={() => <strong>Transactions for {monthText}</strong>}
+                className="transaction-table"
                 scroll={{ y: 540 }}
             />
-        </>
+        </div>
     )
 }
 
-export default Transactions
+export default Transactions;
