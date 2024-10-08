@@ -13,7 +13,7 @@ export default function Stats({ month, monthText }) {
     const getData = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`https://mern-stack-task-j2pc.onrender.com/?month=${month}`);
+            const res = await axios.get(`https://mern-stack-task-j2pc.onrender.com/combined-data?month=${month}`);
             setLoading(false);
             setData(res.data);
             message.success('Data loaded successfully');
