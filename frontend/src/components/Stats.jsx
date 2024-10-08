@@ -12,7 +12,7 @@ export default function Stats({ month, monthText }) {
     const getData = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`https://roxiler-pvpf.onrender.com/combined-data?month=${month}`);
+            const res = await axios.get(`http://localhost:8080/combined-data?month=${month}`);
             setLoading(false);
             setData(res.data);
             message.success('Data loaded successfully');
@@ -87,6 +87,39 @@ function Totals({ stats, loading }) {
         </div>
     )
 }
+const options = {
+    responsive: true,
+    plugins: {
+        legend: {
+            position: 'top'
+        },
+        title: {
+            display: true,
+            text: 'No of products per price range'
+        },
+    },
+    scales: {
+        x: {
+            stacked: true,
+            title: {
+                display: true,
+                text: 'Price Range'
+            }
+        },
+        y: {
+            stacked: true,
+            title: {
+                display: true,
+                text: 'Product Count'
+            },
+            ticks: {
+                stepSize: 4
+            }
+        }
+    },
+    aspectRatio: 1.6,
+};
+
 
 function BarChart({ data }) {
     const options = {
@@ -94,7 +127,11 @@ function BarChart({ data }) {
         plugins: {
             legend: {
                 position: 'top'
-            }
+            },
+            title: {
+                display: true,
+                text: 'No of products per price range'
+            },
         },
         scales: {
             x: {
@@ -116,14 +153,6 @@ function BarChart({ data }) {
             }
         },
         aspectRatio: 1.6,
-        plugins: {
-            title: {
-                display: true,
-                text: 'No of products per price range'
-            },
-        },
-
-
     };
 
     let labels = Object.keys(data);
@@ -150,6 +179,7 @@ function BarChart({ data }) {
         />
     )
 }
+
 
 function PieChart({ data }) {
     let labels = Object.keys(data);

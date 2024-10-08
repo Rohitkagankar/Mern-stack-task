@@ -100,7 +100,7 @@ const App = () => {
             textAlign: "center"
           }}
         >
-          Created by <strong>Saurabh Ghiya</strong>
+          Created by <strong>Rohit Kagankar</strong>
         </Footer>
       </Layout>
     </BrowserRouter>
