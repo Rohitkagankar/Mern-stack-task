@@ -69,7 +69,7 @@ function Transactions({ month, monthText }) {
     const getData = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(`http://localhost:8080/transactions`, {
+            const { data } = await axios.get(`https://mern-stack-task-j2pc.onrender.com/transactions`, {
                 params: {
                     month,
                     page: tableParams.pagination.current,
